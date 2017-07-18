@@ -10,6 +10,11 @@
 </head>
 <body>
 <%@include file="lib/header.jsp" %>
+	<c:forEach var="error" items="${errors}">
+		<div class="alert alert-danger">
+			<strong><c:out value="${error.message}" /></strong>
+		</div>
+	</c:forEach>
 <form action="./controller" method="post" >
 	<input type="hidden" name="command" value="getPeriodicalsSearchPage"/>
 	<input type="hidden" name="searchParam"/>
