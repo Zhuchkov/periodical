@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+import periodical.controller.dto.UserDetailsInput;
 import periodical.model.dao.DaoFactory;
 import periodical.model.dao.PeriodicalDao;
 import periodical.model.dao.SubscriptionDao;
@@ -32,9 +33,11 @@ public class UserDetailsService {
 		this.factory = factory;
 	}
 	
-	public UserDetails updateUserDetails(User user, String firstName, String lastName){
+	public UserDetails updateUserDetails(User user,UserDetailsInput input){
 		try(Connection connection = factory.getConnection()){
 		UserDetailsDao userDetailsDao =factory.createUserDetailsDao(connection);
+		String firstName = input.getFirstName();
+		String lastName = input.getLastName();
 		UserDetails userDetails = new UserDetails.Builder()
 				.setId(user.getId())
 				.setFirstName(firstName)

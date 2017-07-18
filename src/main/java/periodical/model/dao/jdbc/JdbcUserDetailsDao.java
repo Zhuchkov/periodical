@@ -13,7 +13,7 @@ import periodical.model.entity.UserDetails;
 public class JdbcUserDetailsDao implements UserDetailsDao{
 
 	private static final String INSERT_USER_DETAILS_BY_ID = "INSERT INTO user_detail(id ,first_name, last_name, money)VALUES(?,?,?,?) ";
-	private static final String UPDATE_USER_DETAILS_BY_ID = "UPDATE  user_detail SET first_name = ?, last_name = ?, money = ? WHERE id = ?";
+	private static final String UPDATE_USER_DETAILS_BY_ID = "UPDATE  user_detail SET first_name = ?, last_name = ? WHERE id = ?";
 	private static final String SELECT_USER_DETAILS_BY_ID ="SELECT * FROM user_detail WHERE id=?";
 	Connection connection;
 	public JdbcUserDetailsDao(Connection connection){
@@ -67,7 +67,7 @@ public class JdbcUserDetailsDao implements UserDetailsDao{
 			query.setString(1, userDetails.getFirstName());
 			System.out.println(userDetails.getFirstName());
 			query.setString(2, userDetails.getLastName());
-			query.setInt(4, userDetails.getId());
+			query.setInt(3, userDetails.getId());
 			query.executeUpdate();
 			return userDetails;
 		} catch (SQLException e) {

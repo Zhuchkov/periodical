@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-import periodical.controller.dto.PeriodicalsSearchParameters;
+import periodical.controller.dto.PeriodicalSearchParameters;
 import periodical.model.dao.PeriodicalDao;
 import periodical.model.entity.Periodical;
 import periodical.model.entity.User;
@@ -128,7 +128,7 @@ public class JdbcPeriodicalDao implements PeriodicalDao {
 	}
 
 	@Override
-	public List<Periodical> findWithParameters(PeriodicalsSearchParameters searchParameters) {
+	public List<Periodical> findWithParameters(PeriodicalSearchParameters searchParameters) {
 		String Querry = buildQuerry(searchParameters);
 		List<Periodical> result = new LinkedList<>();
 		try(PreparedStatement query =
@@ -145,7 +145,7 @@ public class JdbcPeriodicalDao implements PeriodicalDao {
 			 throw new RuntimeException(e);
 		}
 	}
-	private String buildQuerry(PeriodicalsSearchParameters searchParameters) {
+	private String buildQuerry(PeriodicalSearchParameters searchParameters) {
 		String baseQuerry =  "SELECT periodical.id,periodical.name, periodical.cost, user_detail.first_name, user_detail.last_name, user_detail.id FROM periodical  JOIN category ON category_id = category.id JOIN user_detail on publisher_id=user_detail.id";
 		StringBuilder sb = new StringBuilder(baseQuerry);
 		if(searchParameters.hasWhereConstraints()){

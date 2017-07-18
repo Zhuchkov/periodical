@@ -99,7 +99,6 @@ public class SubscriptionService {
 			// TODO Auto-generated catch block
 			throw new RuntimeException(e);
 		}
-		
 	}
 	
 	private Subscription createDefaultSubscription(User user, Periodical periodical) {

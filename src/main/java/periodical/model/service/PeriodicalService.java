@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import periodical.controller.dto.EntryCreationInput;
-import periodical.controller.dto.PeriodicalsSearchParameters;
+import periodical.controller.dto.PeriodicalSearchParameters;
 import periodical.model.dao.CategoryDao;
 import periodical.model.dao.DaoFactory;
 import periodical.model.dao.PeriodicalDao;
@@ -56,7 +56,7 @@ public class PeriodicalService {
 
 	}
 
-	public List<Periodical> findPeriodicalsWithParameters(PeriodicalsSearchParameters searchParameters) {
+	public List<Periodical> findPeriodicalsWithParameters(PeriodicalSearchParameters searchParameters) {
 		try (Connection connection = factory.getConnection()) {
 			PeriodicalDao periodicalDao = factory.createPeriodicalDao(connection);
 			return periodicalDao.findWithParameters(searchParameters);

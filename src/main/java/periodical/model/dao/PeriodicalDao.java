@@ -3,7 +3,7 @@ package periodical.model.dao;
 import java.util.List;
 import java.util.Optional;
 
-import periodical.controller.dto.PeriodicalsSearchParameters;
+import periodical.controller.dto.PeriodicalSearchParameters;
 import periodical.model.entity.Periodical;
 import periodical.model.entity.User;
 
@@ -12,7 +12,7 @@ public interface PeriodicalDao extends GenericDao<Periodical> {
 
 	List<Periodical> findPeriodicalsByPublisherId(int userId);
 
-	List<Periodical> findWithParameters(PeriodicalsSearchParameters searchParameters);
+	List<Periodical> findWithParameters(PeriodicalSearchParameters searchParameters);
 
 	Optional<Periodical> findWithUser(User user, int periodicalId);
 

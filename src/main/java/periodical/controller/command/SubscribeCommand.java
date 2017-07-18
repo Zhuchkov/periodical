@@ -18,7 +18,7 @@ public class SubscribeCommand implements Command {
 		int periodicalId = Integer.valueOf(request.getParameter("periodicalId"));
 		User user = getUserFromRequest(request);
 		subscriptionService.subscribeUser(user,periodicalId);
-		return null;
+		return executeCommand("getUserDetailsPage", request, response);
 	}
 
 }

@@ -4,11 +4,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
 import periodical.model.dao.UserDao;
+import periodical.model.dao.exceptions.EmailOccupiedException;
 import periodical.model.entity.Role;
 import periodical.model.entity.User;
 
@@ -45,7 +47,6 @@ public class JdbcUserDao implements UserDao {
 				result = Optional.of( extractUserFromResultSet(resultSet));
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			 throw new RuntimeException(e);
 		}
 		return result;
@@ -72,7 +73,11 @@ public class JdbcUserDao implements UserDao {
 			}
 			return user;
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			if( e instanceof SQLIntegrityConstraintViolationException){
+				throw new EmailOccupiedException(e, user);
+			}else{
+			 throw new RuntimeException(e);
+			}
 		}
 	
 		

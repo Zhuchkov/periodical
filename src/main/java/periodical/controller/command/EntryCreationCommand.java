@@ -1,37 +1,48 @@
 package periodical.controller.command;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import periodical.controller.dto.EntryCreationInput;
+import periodical.controller.validation.ValidationError;
+import periodical.controller.validation.ValidatorFactory;
+import periodical.controller.validation.validator.EntryCreationValidator;
 import periodical.model.entity.PeriodicalEntry;
 import periodical.model.entity.User;
 import periodical.model.service.EntryService;
 
 public class EntryCreationCommand implements Command{
 
-	EntryService entryService;
+	private EntryService entryService;
+	private ValidatorFactory validatorFactory;
 	
-	public EntryCreationCommand(EntryService entryService) {
+	public EntryCreationCommand(EntryService entryService,ValidatorFactory validatorFactory) {
 		this.entryService=entryService;
+		this.validatorFactory=validatorFactory;
 	}
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response) {
 		String page;
-		EntryCreationInput entryParams = extractEntryParamsFromRequest(request);
-		Optional<PeriodicalEntry> entry =  entryService.saveEntryAndNotifySubscribers(entryParams);
-		if(entry.isPresent()){
-			request.setAttribute("entryParams", entryParams);
-			page=executeCommand("getPeriodicalEntryCreationPage", request, response);
-			System.out.println("true");
+		EntryCreationInput input = extractEntryParamsFromRequest(request);
+		EntryCreationValidator validator = validatorFactory.createEntryCreationValidator();
+		List<ValidationError> errors = validator.validate(input);
+		if (errors.isEmpty()) {
+			Optional<PeriodicalEntry> entry = entryService.saveEntryAndNotifySubscribers(input);
+			if (entry.isPresent()) {
+				page = executeCommand("getUserDetailsPage", request, response);
+			} else {
+				errors.add(ValidationError.PERIODICAL_OWNERSHIP);
+				request.setAttribute("entryParams", input);
+				page = executeCommand("getPeriodicalEntryCreationPage", request, response);
+			}
 		}else{
-			request.setAttribute("entryParams", entryParams);
-			page=executeCommand("getPeriodicalEntryCreationPage", request, response);
-			System.out.println("false");
+			page = executeCommand("getPeriodicalEntryCreationPage", request, response);
 		}
+		request.setAttribute("errors", errors);
 		return page;
 	}
 

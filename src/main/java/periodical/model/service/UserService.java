@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Optional;
 
+import periodical.controller.dto.RegistrationInput;
+import periodical.controller.validation.ValidatorFactory;
 import periodical.model.dao.DaoFactory;
 import periodical.model.dao.UserDao;
 import periodical.model.entity.Role;
@@ -11,7 +13,6 @@ import periodical.model.entity.User;
 
 public class UserService {
 
-	
 	private DaoFactory factory;
 	
 	private static class Holder{
@@ -27,10 +28,10 @@ public class UserService {
 	}
 
 
-	public User saveUser(String email, String password) {
+	public User saveUser(RegistrationInput input) {
 		User user = new User.Builder()
-				.setEmail(email)
-				.setPassword(password)
+				.setEmail(input.getEmail())
+				.setPassword(input.getFirstPassword())
 				.setRole(Role.USER)
 				.build();
 		try(Connection connection = factory.getConnection()){
