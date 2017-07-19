@@ -3,7 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang=<c:out value=" ${sessionScope.locale}"></c:out>>
 <head>
 <%@include file="lib/bootstrapIncluds.jsp" %>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">

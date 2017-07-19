@@ -33,6 +33,7 @@ public class CommandFactory {
 			put("empty", new EmptyCommand());
 			put("login", new LoginCommand(UserService.getInstance(),ValidatorFactory.getInstance()));
 			put("logout", new LogoutCommand());
+			put("setLocale", new SetLocaleCommand());
 			put("registration", new RegistrationCommand(UserService.getInstance(), ValidatorFactory.getInstance()));
 			put("userDetailUpdate", new UserDetailUpdateCommand(UserDetailsService.getInstance(),ValidatorFactory.getInstance()));
 			put("periodicalCreation", new PeriodicalCreationCommand(PeriodicalService.getInstance(),ValidatorFactory.getInstance()));

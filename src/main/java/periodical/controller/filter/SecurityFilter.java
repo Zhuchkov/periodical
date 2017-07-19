@@ -33,7 +33,7 @@ public class SecurityFilter implements Filter {
 		HttpServletResponse httpResponce = (HttpServletResponse) response;
 		String command = (String) request.getParameter("command");
 		
-		if (command!=null&&!command.equals("login")&&!command.equals("registration")&&!command.equals( "getPeriodicalsSearchPage")) {
+		if (command!=null&&!command.equals("login")&&!command.equals("registration")&&!command.equals("getPeriodicalsSearchPage")&&!command.equals("setLocale")) {
 			HttpSession session = httpRequest.getSession();
 			
 			User user = (User) session.getAttribute("user");
