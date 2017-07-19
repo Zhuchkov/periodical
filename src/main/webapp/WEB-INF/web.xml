@@ -31,12 +31,17 @@
 <filter>
  	<filter-name>securityFilter</filter-name>
  	<filter-class>periodical.controller.filter.SecurityFilter</filter-class>
+ 	<init-param>
+		<param-name>ignoreCommand</param-name>
+		<param-value>login,registration,getPeriodicalsSearchPage,setLocale,getRegisterPage,getLoginPage</param-value>
+	</init-param>
  </filter>
  <filter-mapping>
  	<filter-name>securityFilter</filter-name>
  	<url-pattern>/controller</url-pattern>
  </filter-mapping>
- 
-
- 
+  <error-page>
+        <error-code>404</error-code>
+        <location>/WEB-INF/error/error404.jsp</location>
+    </error-page>
 </web-app>

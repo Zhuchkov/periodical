@@ -31,7 +31,7 @@ public class LoginCommand implements Command{
 		if(errors.isEmpty()){
 		page = modelValidation(request, input,errors);
 		}else{
-			page="/login.jsp";
+			page=Page.LOGIN_JSP;
 			request.setAttribute("emailError", ValidationError.EMAIL);
 			request.setAttribute("passwordError", ValidationError.PASSWORD);
 		}
@@ -46,15 +46,15 @@ public class LoginCommand implements Command{
 			if(userService.checkPassword(user.get(), input.getPassword())){
 				HttpSession session = request.getSession();
 				session.setAttribute("user", user.get());
-				page="/index.jsp";
+				page=Page.INDEX_JSP;
 			}else{
 				errors.add(ValidationError.EMAIL_PASSWORD_MISMATCH);
 				request.setAttribute("email",input.getEmail());
-				page = "/login.jsp";
+				page = Page.LOGIN_JSP;
 			}
 		}else{
 			errors.add(ValidationError.EMAIL_NOT_FOUND);
-			page = "/login.jsp";
+			page = Page.LOGIN_JSP;
 		}
 		return page;
 	}

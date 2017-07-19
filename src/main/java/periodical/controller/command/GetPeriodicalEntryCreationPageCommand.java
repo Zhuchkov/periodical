@@ -11,6 +11,7 @@ import periodical.model.service.PeriodicalService;
 
 public class GetPeriodicalEntryCreationPageCommand implements Command {
 
+	
 	PeriodicalService periodicalService;
 	public GetPeriodicalEntryCreationPageCommand(PeriodicalService periodicalService) {
 		this.periodicalService=periodicalService;
@@ -23,7 +24,7 @@ public class GetPeriodicalEntryCreationPageCommand implements Command {
 		Optional<Periodical> periodical = periodicalService.findPeriodicalByUserAndId(currentUser,periodicalId);
 		if(periodical.isPresent()){
 			request.setAttribute("periodical", periodical.get());
-			page = "/WEB-INF/jsp/entryCreation.jsp";
+			page = Page.ENTRY_CREATION_JSP;
 		}else{
 			request.setAttribute("errorMessage", "no periodical with such id was found");
 			page = executeCommand("getUserDetailsPage", request, response);

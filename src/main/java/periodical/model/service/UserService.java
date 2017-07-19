@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 import periodical.controller.dto.RegistrationInput;
-import periodical.controller.validation.ValidatorFactory;
 import periodical.model.dao.DaoFactory;
 import periodical.model.dao.UserDao;
 import periodical.model.entity.Role;
@@ -14,17 +13,19 @@ import periodical.model.entity.User;
 public class UserService {
 
 	private DaoFactory factory;
+	private UserDetailsService userDetailsService;
 	
 	private static class Holder{
-		private static final UserService INSTANCE = new UserService(DaoFactory.getInstance());
+		private static final UserService INSTANCE = new UserService(DaoFactory.getInstance(),UserDetailsService.getInstance());
 	}
 	
 	public static UserService getInstance(){
 		return Holder.INSTANCE;
 		
 	}
-	UserService(DaoFactory factory) {
+	UserService(DaoFactory factory,UserDetailsService userDetailsService) {
 		this.factory = factory;
+		this.userDetailsService = userDetailsService;
 	}
 
 
@@ -38,7 +39,6 @@ public class UserService {
 			connection.setAutoCommit(false);
 			UserDao userDao = factory.createUserDao(connection);
 			user = userDao.insert(user);
-			UserDetailsService userDetailsService = new UserDetailsService(factory);
 			userDetailsService.saveDefaultUserDetails(user, connection);
 			connection.setAutoCommit(true);
 			return user;

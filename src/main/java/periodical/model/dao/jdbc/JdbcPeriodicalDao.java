@@ -1,5 +1,6 @@
 package periodical.model.dao.jdbc;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 import periodical.controller.dto.PeriodicalSearchParameters;
+import periodical.controller.dto.UserDetailsPagination;
 import periodical.model.dao.PeriodicalDao;
 import periodical.model.entity.Periodical;
 import periodical.model.entity.User;
@@ -19,7 +21,7 @@ public class JdbcPeriodicalDao implements PeriodicalDao {
 
 	private static final String SELECT_FROM_PERIODICAL_BY_ID = "SELECT * FROM periodical WHERE id=?";
 	private static final String SELECT_FROM_PERIODICAL_BY_ID_AND_USER = "SELECT * FROM periodical WHERE id=? AND publisher_id =?";
-	private static final String SELECT_FROM_PERIODICAL_BY_PUBLISHER_ID = "SELECT * FROM periodical WHERE publisher_id = ?";
+	private static final String SELECT_FROM_PERIODICAL_BY_PUBLISHER_ID = "SELECT * FROM periodical WHERE publisher_id = ? LIMIT ?,?";
 	private static final String INSERT_INTO_PERIODICAL = "INSERT INTO periodical(name,cost,publisher_id,category_id) VALUES(?,?,?,?)";
 	private static final String ID_COL = "id";
 	private static final String NAME_COL = "name";
@@ -111,11 +113,13 @@ public class JdbcPeriodicalDao implements PeriodicalDao {
 	}
 
 	@Override
-	public List<Periodical> findPeriodicalsByPublisherId(int publisherId) {
+	public List<Periodical> findPeriodicalsByPublisherId(int publisherId,UserDetailsPagination paginationParams) {
 		List<Periodical> result = new LinkedList<>();
 		try(PreparedStatement query =
                 connection.prepareStatement(SELECT_FROM_PERIODICAL_BY_PUBLISHER_ID)){
 			query.setInt(1, publisherId);
+			query.setInt(2,paginationParams.getPeriodicalPage()*paginationParams.getPeriodicalPageLength());
+			query.setInt(3, paginationParams.getPeriodicalPageLength());
 			ResultSet resultSet = query.executeQuery();
 			while(resultSet.next()){
 				result.add( extractPeriodicalFromResultSet(resultSet));
@@ -133,6 +137,7 @@ public class JdbcPeriodicalDao implements PeriodicalDao {
 		List<Periodical> result = new LinkedList<>();
 		try(PreparedStatement query =
                 connection.prepareStatement(Querry)){
+			setParamsToQuerry(query,searchParameters);
 			ResultSet resultSet = query.executeQuery();
 			while(resultSet.next()){
 				Periodical current = extractPeriodicalFromResultSet(resultSet);
@@ -145,6 +150,8 @@ public class JdbcPeriodicalDao implements PeriodicalDao {
 			 throw new RuntimeException(e);
 		}
 	}
+
+
 	private String buildQuerry(PeriodicalSearchParameters searchParameters) {
 		String baseQuerry =  "SELECT periodical.id,periodical.name, periodical.cost, user_detail.first_name, user_detail.last_name, user_detail.id FROM periodical  JOIN category ON category_id = category.id JOIN user_detail on publisher_id=user_detail.id";
 		StringBuilder sb = new StringBuilder(baseQuerry);
@@ -153,34 +160,58 @@ public class JdbcPeriodicalDao implements PeriodicalDao {
 			sb.append(" Where");
 			boolean firstParam = true;
 			if(searchParameters.hasCategory()){
-				sb.append(" category.id = "+searchParameters.getCategory().getId());
+				sb.append(" category.id = ?");
+			
 				firstParam=false;
 			}
 			if(searchParameters.hasPeriodicalName()){
 				if(!firstParam){
 					sb.append(" AND ");
 				}
-				sb.append(" periodical.name LIKE '"+searchParameters.getPeriodicalName()+"%'");
+				sb.append(" periodical.name LIKE ?");
+				
 			}
 			if(searchParameters.hasPublisherName()){
 				if(!firstParam){
 					sb.append(" AND ");
 				}
-				sb.append(" user_detail.first_name LIKE '"+searchParameters.getPublisherName()+"%'");
+				sb.append(" user_detail.first_name LIKE ?");
+			
 			}
 			if(searchParameters.hasMaxCost()){
 				if(!firstParam){
 					sb.append(" AND ");
 				}
-				sb.append(" periodical.cost >"+searchParameters.getMaxCost());
+				sb.append(" periodical.cost >?");
 			}
 			
 		}
 		sb.append(" ORDER BY "+searchParameters.getSortParam().getColumnName());
-		if(searchParameters.isDescending()){
+		if(searchParameters.getDescending()){
 			sb.append(" desc");
+			
 		}
+		sb.append(" LIMIT ?, ?");
 		return sb.toString();
+	}
+	private void setParamsToQuerry(PreparedStatement query, PeriodicalSearchParameters searchParameters) throws SQLException {
+		int paramCounter = 1;
+		if(searchParameters.hasWhereConstraints()){
+			if(searchParameters.hasCategory()){
+				query.setInt(paramCounter++, searchParameters.getCategory().getId());
+			}
+			if(searchParameters.hasPeriodicalName()){
+				query.setString(paramCounter++, searchParameters.getPeriodicalName()+"%");
+			}
+			if(searchParameters.hasPublisherName()){
+				query.setString(paramCounter++, searchParameters.getPublisherName()+"%");
+			}
+			if(searchParameters.hasMaxCost()){
+				query.setBigDecimal(paramCounter++, new BigDecimal(searchParameters.getMaxCost()));
+			}
+			query.setInt(paramCounter++, searchParameters.getPageNumber()*searchParameters.getPageLength());
+			query.setInt(paramCounter++, searchParameters.getPageLength());
+		}	
 	}
 
 	private UserDetails extractPublisherFromResultSet(ResultSet resultSet) throws SQLException {

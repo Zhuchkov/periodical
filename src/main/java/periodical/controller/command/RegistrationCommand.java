@@ -16,6 +16,7 @@ import periodical.model.service.UserService;
 
 public class RegistrationCommand implements Command {
 
+	
 	private UserService userService;
 	private ValidatorFactory validatorFactory;
 
@@ -36,14 +37,14 @@ public class RegistrationCommand implements Command {
 			try {
 				User user = userService.saveUser(input);
 				request.setAttribute("createdUser", user);
-				page = "/login.jsp";
+				page = Page.LOGIN_JSP;
 			} catch (EmailOccupiedException e) {
 				System.out.println("catch");
 				User user = e.getUser();
 				request.setAttribute("email", user.getEmail());
 				errors.add(ValidationError.EMAIL_OCCUPIED);
 				request.setAttribute("errors", errors);
-				page = "/registration.jsp";
+				page = Page.REGISTRATION_JSP;
 			}
 		} else {
 			request.setAttribute("email", input.getEmail());
@@ -51,7 +52,7 @@ public class RegistrationCommand implements Command {
 			request.setAttribute("emailError", ValidationError.EMAIL);
 			request.setAttribute("passwordError", ValidationError.PASSWORD);
 			request.setAttribute("passwordEqualityError", ValidationError.PASSWORD_EQUALITY);
-			page = "/registration.jsp";
+			page = Page.REGISTRATION_JSP;
 		}
 		return page;
 	}

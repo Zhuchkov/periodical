@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 import periodical.controller.dto.EntryCreationInput;
+import periodical.controller.dto.EntryPageInput;
 import periodical.model.dao.DaoFactory;
 import periodical.model.dao.PeriodicalEntryDao;
 import periodical.model.dao.SubscriptionDao;
@@ -57,10 +58,10 @@ public class EntryService {
 		}
 
 	}
-	public List<PeriodicalEntry> getLastAvailableEntries(User requestCreator, int subscriptionId) {
+	public List<PeriodicalEntry> getLastAvailableEntries(EntryPageInput inputParams) {
 		try(Connection connection = factory.getConnection()){
 			PeriodicalEntryDao entryDao = factory.createPeriodicalEntryDao(connection);
-			List<PeriodicalEntry> entries =entryDao.findAllBySubscriptionAndSubscriber(requestCreator.getId(),subscriptionId);
+			List<PeriodicalEntry> entries =entryDao.findAllBySubscriptionAndSubscriber(inputParams);
 			return entries;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

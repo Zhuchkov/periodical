@@ -45,16 +45,16 @@ public class PeriodicalService {
 		}
 	}
 
-	public List<Periodical> findAllPeriodicalsByPublisher(User user) {
-		try (Connection connection = factory.getConnection()) {
-			PeriodicalDao periodicalDao = factory.createPeriodicalDao(connection);
-			return periodicalDao.findPeriodicalsByPublisherId(user.getId());
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			throw new RuntimeException(e);
-		}
-
-	}
+//	public List<Periodical> findAllPeriodicalsByPublisher(User user) {
+//		try (Connection connection = factory.getConnection()) {
+//			PeriodicalDao periodicalDao = factory.createPeriodicalDao(connection);
+//			return periodicalDao.findPeriodicalsByPublisherId(user.getId());
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			throw new RuntimeException(e);
+//		}
+//
+//	}
 
 	public List<Periodical> findPeriodicalsWithParameters(PeriodicalSearchParameters searchParameters) {
 		try (Connection connection = factory.getConnection()) {

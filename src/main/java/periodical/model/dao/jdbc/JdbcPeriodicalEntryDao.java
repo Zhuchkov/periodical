@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
+import periodical.controller.dto.EntryPageInput;
 import periodical.model.dao.PeriodicalEntryDao;
 import periodical.model.entity.PeriodicalEntry;
 
@@ -18,7 +19,7 @@ public class JdbcPeriodicalEntryDao implements PeriodicalEntryDao{
 
 	private static final String INSERT_ENTRY = "INSERT INTO periodical_entry(name, data, creation_time, periodical_id) VALUES(?,?,?,?)";
 
-	private static final String SELECT_ALL_AVAILABLE_ENTRY = "SELECT * FROM periodical_entry entry JOIN subscription ON entry.periodical_id = subscription.periodical_id WHERE subscription.id = ? AND subscription.subscriber_id = ? AND subscription.last_available_entry_date > entry.creation_time ORDER BY creation_time DESC";
+	private static final String SELECT_ALL_AVAILABLE_ENTRY = "SELECT * FROM periodical_entry entry JOIN subscription ON entry.periodical_id = subscription.periodical_id WHERE subscription.id = ? AND subscription.subscriber_id = ? AND subscription.last_available_entry_date > entry.creation_time ORDER BY creation_time DESC LIMIT ?,?";
 
 	private static final String ID = "entry.id";
 
@@ -52,12 +53,14 @@ public class JdbcPeriodicalEntryDao implements PeriodicalEntryDao{
 		}
 	}
 	@Override
-	public List<PeriodicalEntry> findAllBySubscriptionAndSubscriber(int requestCreatorId, int subscriptionId) {
+	public List<PeriodicalEntry> findAllBySubscriptionAndSubscriber(EntryPageInput inputParams) {
 		try(PreparedStatement query =
                 connection.prepareStatement(SELECT_ALL_AVAILABLE_ENTRY)){
 			List<PeriodicalEntry> result = new LinkedList<>();
-			query.setInt(1,subscriptionId);
-			query.setInt(2, requestCreatorId);
+			query.setInt(1,inputParams.getSubscriptionId());
+			query.setInt(2, inputParams.getUserId());
+			query.setInt(3, inputParams.getEntryPage()*inputParams.getEntryPageLength());
+			query.setInt(4, inputParams.getEntryPageLength());
 			ResultSet resultSet = query.executeQuery();
 			while(resultSet.next()){
 				result.add(extractEntry(resultSet));
