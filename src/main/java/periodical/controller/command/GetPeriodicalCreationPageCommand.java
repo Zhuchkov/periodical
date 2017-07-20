@@ -10,6 +10,7 @@ import periodical.model.service.CategoryService;
 
 public class GetPeriodicalCreationPageCommand implements Command {
 
+	
 	CategoryService categoryService;
 	GetPeriodicalCreationPageCommand(CategoryService categoryService){
 		this.categoryService=categoryService;
@@ -18,6 +19,6 @@ public class GetPeriodicalCreationPageCommand implements Command {
 	public String execute(HttpServletRequest request, HttpServletResponse response) {
 		List<Category> categories = categoryService.getCategories();
 		request.setAttribute("categories", categories);
-		return "/WEB-INF/jsp/periodicalCreation.jsp";
+		return Page.PERIODICAL_CREATION_JSP;
 	}
 }

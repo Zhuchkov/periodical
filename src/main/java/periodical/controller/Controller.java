@@ -30,7 +30,11 @@ public class Controller extends HttpServlet {
 		String page;
 		CommandFactory commandFactory = CommandFactory.getInstance();
 		Command command = commandFactory.defineCommand(req);
-		page = command.execute(req, resp);
+		try{
+			page = command.execute(req, resp);
+		}catch(Throwable e){
+			page = "/WEB-INF/jsp/error/error.jsp";
+		}
 		if(page != null){
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(page);
 			dispatcher.forward(req, resp);

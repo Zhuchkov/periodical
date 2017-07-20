@@ -34,15 +34,15 @@ public class SubscriptionService {
 	}
 
 
-	public List<Subscription> getSubscriptionsBySubscriber(User user) {
-		try (Connection connection = factory.getConnection()) {
-			SubscriptionDao subscriptionDao = factory.createSubscriptionDao(connection);
-			return subscriptionDao.findSubscriptionsBySubscriberId(user.getId());
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			throw new RuntimeException(e);
-		}
-	}
+//	public List<Subscription> getSubscriptionsBySubscriber(User user) {
+//		try (Connection connection = factory.getConnection()) {
+//			SubscriptionDao subscriptionDao = factory.createSubscriptionDao(connection);
+//			return subscriptionDao.findSubscriptionsBySubscriberId(user.getId());
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			throw new RuntimeException(e);
+//		}
+//	}
 
 	public Optional<Subscription> subscribeUser(User user, int periodicalId) {
 		try (Connection connection = factory.getConnection()) {
@@ -70,7 +70,6 @@ public class SubscriptionService {
 	public void paySubscriptionFee(int subscriptionId) {
 	
 		try (Connection connection = factory.getConnection()) {
-			//connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
 			connection.setAutoCommit(false);
 			SubscriptionDao subscriptionDao = factory.createSubscriptionDao(connection);
 			Optional<Subscription> optionalSubscription=subscriptionDao.find(subscriptionId);

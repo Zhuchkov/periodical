@@ -3,7 +3,10 @@ package periodical.controller.command;
 import java.util.HashMap;
 import java.util.Map;
 
+
 import javax.servlet.http.HttpServletRequest;
+
+import org.apache.log4j.Logger;
 
 import periodical.controller.validation.ValidatorFactory;
 import periodical.model.service.CategoryService;
@@ -14,7 +17,9 @@ import periodical.model.service.UserDetailsService;
 import periodical.model.service.UserService;
 
 public class CommandFactory {
-
+	
+	private static final Logger LOGGER = Logger.getLogger(CommandFactory.class);
+	
 	private static class Holder {
 		private static CommandFactory INSTANCE = new CommandFactory();
 	}
@@ -45,7 +50,6 @@ public class CommandFactory {
 			put("getPeriodicalsSearchPage", new GetPeriodicalsSearchPageCommand(PeriodicalService.getInstance(),
 																				CategoryService.getInstance(),
 																				ValidatorFactory.getInstance()));
-			put("getMainPage", new GetMainPageCommand());
 			put("getPeriodicalCreationPage", new GetPeriodicalCreationPageCommand(CategoryService.getInstance()));
 			put("getUserDetailsPage", new GetUserDetailsPageCommand(UserDetailsService.getInstance()));
 			put("getUserDetailsUpdatePage", new GetUserDetailsUpdatePageCommand(UserDetailsService.getInstance()));
@@ -61,10 +65,13 @@ public class CommandFactory {
 		String action = req.getParameter("command");
 		if (action == null || action.isEmpty()) {
 			current = emptyComand;
+			LOGGER.info("No command param found");
 		}
 		if ((current = commands.get(action)) == null) {
 			current = emptyComand;
+			LOGGER.info("Comand "+action+" not found");
 		}
+		LOGGER.info("Comand "+current+" returned");
 		return current;
 	}
 

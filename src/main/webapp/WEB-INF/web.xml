@@ -37,6 +37,4 @@
  	<url-pattern>/controller</url-pattern>
  </filter-mapping>
  
-
- 
 </web-app>

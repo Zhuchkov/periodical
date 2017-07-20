@@ -10,6 +10,7 @@ import periodical.model.entity.UserDetails;
 import periodical.model.service.UserDetailsService;
 
 public class GetUserDetailsUpdatePageCommand implements Command {
+	
 	UserDetailsService userDetailsService;
 	GetUserDetailsUpdatePageCommand(UserDetailsService userDetailsService){
 		this.userDetailsService=userDetailsService;
@@ -21,7 +22,7 @@ public class GetUserDetailsUpdatePageCommand implements Command {
 		Optional<UserDetails> userDetails = userDetailsService.getUserDetails(user);
 		if(userDetails.isPresent()){
 			request.setAttribute("userDetails", userDetails.get());
-			page = "/WEB-INF/jsp/userDetailsUpdate.jsp";
+			page = Page.USER_DETAILS_UPDATE_JSP;
 		}
 		return page;
 	}

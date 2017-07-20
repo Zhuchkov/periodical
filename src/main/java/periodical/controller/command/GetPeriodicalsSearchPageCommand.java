@@ -17,6 +17,7 @@ import periodical.model.service.PeriodicalService;
 
 public class GetPeriodicalsSearchPageCommand implements Command {
 
+	
 	PeriodicalService periodicalService; 
 	CategoryService categoryService;
 	ValidatorFactory validatorFactory;
@@ -37,27 +38,39 @@ public class GetPeriodicalsSearchPageCommand implements Command {
 			List<ValidationError> errors = validator.validate(searchParameters);
 			
 			if (errors.isEmpty()) {
-				searchParameters.setCategory(categories.get(Integer.valueOf(request.getParameter("category"))));
+				int categoryOrigin = Integer.valueOf(request.getParameter("category"));
+				searchParameters.setCategory(categories.get(categoryOrigin));
+				setPageOffset(request, searchParameters);
 				List<Periodical> foundPeriodicals = periodicalService.findPeriodicalsWithParameters(searchParameters);
+				request.setAttribute("categoryOrigrn", categoryOrigin);
 				request.setAttribute("foundPeriodicals", foundPeriodicals);
+				request.setAttribute("searchParameters", searchParameters);
 			}else{
 				request.setAttribute("errors", errors);
 			}
 		}
-		return "/WEB-INF/jsp/periodicalSearch.jsp";
+		return Page.PERIODICAL_SEARCH_JSP;
+	}
+
+	private void setPageOffset(HttpServletRequest request, PeriodicalSearchParameters searchParameters) {
+		String pageNumberParam = request.getParameter("pageNumber");
+		if (pageNumberParam != null) {
+			int pageNumber = Integer.valueOf(pageNumberParam);
+			searchParameters.setPageNumber(pageNumber);
+		}
 	}
 
 	private PeriodicalSearchParameters extractSearchParameters(HttpServletRequest request) {
-//		System.out.println(request.getParameter("periodicalName"));
-//		System.out.println(request.getParameter("publisherName"));
-//		System.out.println(request.getParameter("maxPrice"));
-//		System.out.println(request.getParameter("sortParam"));
-		return new PeriodicalSearchParameters.Builder()
+		PeriodicalSearchParameters params = new PeriodicalSearchParameters.Builder()
 				.setPeriodicalName(request.getParameter("periodicalName"))
 				.setPublisherName(request.getParameter("publisherName"))
 				.setMaxCost(request.getParameter("maxPrice"))
 				.setSortParam(SortParam.valueOf(request.getParameter("sortParam")))
 				.build();
+		if(request.getParameter("order")!= null&&request.getParameter("order").equals("descending")){
+			params.setDescending(true);
+		}
+		return params;
 	}
 
 }

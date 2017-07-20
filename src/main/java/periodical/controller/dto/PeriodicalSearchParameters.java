@@ -3,16 +3,25 @@ package periodical.controller.dto;
 import periodical.model.entity.Category;
 
 public class PeriodicalSearchParameters {
+	private static final int START_PAGE_NUMBER = 0;
+	private static final int DEFAULT_PAGE_LENGTH = 10;
 	
 	private String publisherName;
 	private String periodicalName;
 	private String maxCost;
 	private Category category;
 	private SortParam sortParam;
-	private boolean descending ;
+	private boolean descending;
+	
+	private int pageNumber = START_PAGE_NUMBER;
+	private int pageLength = DEFAULT_PAGE_LENGTH;
+	
 	
 	private PeriodicalSearchParameters(){
 		
+	}
+	public boolean hasWhereConstraints(){
+		return hasCategory()||hasPublisherName()||hasPeriodicalName()||hasMaxCost();
 	}
 	
 	public boolean hasPublisherName(){
@@ -27,10 +36,7 @@ public class PeriodicalSearchParameters {
 	public boolean hasCategory(){
 		return category!=null;
 	}
-	public boolean hasWhereConstraints(){
-		return hasCategory()||hasPublisherName()||hasPeriodicalName()||hasMaxCost();
-	}
-	
+
 	public String getPublisherName() {
 		return publisherName;
 	}
@@ -64,12 +70,25 @@ public class PeriodicalSearchParameters {
 		this.sortParam = sortParam;
 	}
 
-	public boolean isDescending() {
+	public boolean getDescending() {
 		return descending;
 	}
 
 	public void setDescending(boolean descending) {
 		this.descending = descending;
+	}
+
+	public int getPageNumber() {
+		return pageNumber;
+	}
+	public void setPageNumber(int pageOffset) {
+		this.pageNumber = pageOffset;
+	}
+	public int getPageLength() {
+		return pageLength;
+	}
+	public void setPageLength(int pageLength) {
+		this.pageLength = pageLength;
 	}
 
 	public static class Builder{
@@ -97,6 +116,14 @@ public class PeriodicalSearchParameters {
 		}
 		public Builder setDescending(boolean desc){
 			instance.descending=desc;
+			return this;
+		}
+		public Builder setPageOffset(int pageOffset) {
+			instance.pageNumber=pageOffset;
+			return this;
+		}
+		public Builder setPageLength(int pageLength) {
+			instance.pageLength=pageLength;
 			return this;
 		}
 		

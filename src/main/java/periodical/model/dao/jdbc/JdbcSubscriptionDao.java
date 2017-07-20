@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
+import periodical.controller.dto.UserDetailsPagination;
 import periodical.model.dao.DaoFactory;
 import periodical.model.dao.PeriodicalDao;
 import periodical.model.dao.SubscriptionDao;
@@ -22,7 +23,7 @@ import periodical.model.entity.UserDetails;
 
 public class JdbcSubscriptionDao implements SubscriptionDao {
 
-	private static final String SELECT_SUBSCRIPTION_BY_SUBSCRIBER = "SELECT subscription.id,subscription.last_available_entry_date, subscription.updated,subscription.active,subscriber.id, subscriber.first_name, subscriber.last_name, subscriber.money,  periodical.id, periodical.cost, periodical.name FROM subscription JOIN user_detail subscriber ON subscriber_id = subscriber.id JOIN periodical ON periodical.id = periodical_id  where subscriber_id = ?";
+	private static final String SELECT_SUBSCRIPTION_BY_SUBSCRIBER = "SELECT subscription.id,subscription.last_available_entry_date, subscription.updated,subscription.active,subscriber.id, subscriber.first_name, subscriber.last_name, subscriber.money,  periodical.id, periodical.cost, periodical.name FROM subscription JOIN user_detail subscriber ON subscriber_id = subscriber.id JOIN periodical ON periodical.id = periodical_id  where subscriber_id = ? LIMIT ?,?";
 	private static final String SELECT_SUBSCRIPTION_BY_PERIODICAL = "SELECT subscription.id,subscription.last_available_entry_date, subscription.updated,subscription.active,subscriber.id, subscriber.first_name, subscriber.last_name, subscriber.money,  periodical.id, periodical.cost, periodical.name FROM subscription JOIN user_detail subscriber ON subscriber_id = subscriber.id JOIN periodical ON periodical.id = periodical_id  where periodical_id = ?";
 	private static final String SELECT_SUBSCRIPTION_BY_PERIODICAL_AND_SUBSCRIBER = "SELECT subscription.id,subscription.last_available_entry_date, subscription.updated,subscription.active,subscriber.id, subscriber.first_name, subscriber.last_name, subscriber.money,  periodical.id, periodical.cost, periodical.name FROM subscription JOIN user_detail subscriber ON subscriber_id = subscriber.id JOIN periodical ON periodical.id = periodical_id  where periodical_id = ? AND subscriber_id = ?";
 	
@@ -138,10 +139,12 @@ public class JdbcSubscriptionDao implements SubscriptionDao {
 	}
 
 	@Override
-	public List<Subscription> findSubscriptionsBySubscriberId(int subscriberId) {
+	public List<Subscription> findSubscriptionsBySubscriberId(int subscriberId,UserDetailsPagination paginationParams) {
 		try (PreparedStatement query = connection.prepareStatement(SELECT_SUBSCRIPTION_BY_SUBSCRIBER)) {
 			List<Subscription> subscriptions = new LinkedList<>();
 			query.setInt(1, subscriberId);
+			query.setInt(2, paginationParams.getSubscriptionPage()*paginationParams.getSubscriptionPageLength());
+			query.setInt(3, paginationParams.getSubscriptionPageLength());
 			ResultSet resultSet = query.executeQuery();
 			while (resultSet.next()) {
 				subscriptions.add(extractSubscriptionWithSubscriberAndPeriodical(resultSet));

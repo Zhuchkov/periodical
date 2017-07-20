@@ -5,10 +5,11 @@ import javax.servlet.http.HttpServletResponse;
 
 public class EmptyCommand implements Command{
 
+	
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response) {
 		// TODO Auto-generated method stub
-		return "/index.jsp";
+		return Page.INDEX_JSP;
 	}
 
 }

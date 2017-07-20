@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 import periodical.controller.dto.UserDetailsInput;
+import periodical.controller.dto.UserDetailsPagination;
 import periodical.model.dao.DaoFactory;
 import periodical.model.dao.PeriodicalDao;
 import periodical.model.dao.SubscriptionDao;
@@ -63,16 +64,16 @@ public class UserDetailsService {
 		}
 	}
 	
-	public Optional<UserDetails> getUserDetailsWithPeriodicalsAndSubscriptions(User user) {
+	public Optional<UserDetails> getUserDetailsWithPeriodicalsAndSubscriptions(User user, UserDetailsPagination paginationParams) {
 		Optional<UserDetails> result = Optional.empty();
 		Optional<UserDetails> foundUserDetails = getUserDetails(user);
 		if(foundUserDetails.isPresent()){
 		try(Connection connection = factory.getConnection()){
 			PeriodicalDao periodicalDao = factory.createPeriodicalDao(connection);
-			List<Periodical> periodicals = periodicalDao.findPeriodicalsByPublisherId(user.getId());
+			List<Periodical> periodicals = periodicalDao.findPeriodicalsByPublisherId(user.getId(),paginationParams);
 			
 			SubscriptionDao subscriptionDao = factory.createSubscriptionDao(connection);
-			List<Subscription> subscriptions = subscriptionDao.findSubscriptionsBySubscriberId(user.getId());
+			List<Subscription> subscriptions = subscriptionDao.findSubscriptionsBySubscriberId(user.getId(),paginationParams);
 			
 			UserDetails userDetails = foundUserDetails.get();
 			userDetails.setPeriodicals(periodicals);
@@ -102,7 +103,7 @@ public class UserDetailsService {
 		UserDetails defaultUserDetails = new UserDetails.Builder()
 				.setFirstName(UNDEFINE)
 				.setLastName(UNDEFINE)
-				.setMoney(new BigDecimal(0))
+				.setMoney(new BigDecimal(10000))
 				.build();
 		defaultUserDetails.setId(user.getId());
 		user.setUserDetails(defaultUserDetails);
