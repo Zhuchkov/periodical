@@ -8,7 +8,7 @@ public class RegexpConstant {
 	private static final String PASSWORD_REGEX = "^[a-zA-Z]\\w{3,14}$";
 	private static final String NAME_REGEX ="^[a-zA-Zа-яА-Я]{3,}$";
 	private static final String CURRENCY_REGEX ="^\\d+(\\.\\d{2})?$";
-	private static final String TEXT_REGEX ="^[a-zA-Zа-яА-Я\\s]*$";
+	private static final String TEXT_REGEX ="^[a-zA-Zа-яА-Я\\s\\d]*$";
 	
 	
 	public static final Pattern EMAIL  = Pattern.compile(EMAIL_REGEX);

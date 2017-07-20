@@ -9,7 +9,7 @@ import periodical.controller.validation.ValidationError;
 
 public class PeriodicalNameRule implements PeriodicalCreationRule {
 
-	private ValidationError error= ValidationError.EMAIL;
+	private ValidationError error= ValidationError.PERIODICAL_NAME;
 	private Pattern namePattern = RegexpConstant.TEXT;
 
 	@Override

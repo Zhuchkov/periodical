@@ -55,7 +55,9 @@
 					class="form-control" name="category">
 					<c:set var="count" value="0" scope="page" />
 					<c:forEach var="category" items="${categories}">
-						<option value="${count}">${category.name}</option>
+						<option value="${count}" 
+						${searchParameters.sortParam ==null? "selected":(searchParameters.category.id == category.id ?"selected":"")}>
+						${category.name}</option>
 						<c:set var="count" value="${count + 1}" scope="page" />
 					</c:forEach>
 				</select>
