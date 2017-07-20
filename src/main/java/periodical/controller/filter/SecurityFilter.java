@@ -1,6 +1,9 @@
 package periodical.controller.filter;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -12,13 +15,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import periodical.controller.command.Command;
-import periodical.controller.command.CommandFactory;
 import periodical.model.entity.User;
 
 public class SecurityFilter implements Filter {
 
 	private static final String INDEX_PAGE = "/index.jsp";
+	List<String> ignoreCommand;
 
 	@Override
 	public void destroy() {
@@ -33,7 +35,7 @@ public class SecurityFilter implements Filter {
 		HttpServletResponse httpResponce = (HttpServletResponse) response;
 		String command = (String) request.getParameter("command");
 		
-		if (command!=null&&!command.equals("login")&&!command.equals("registration")&&!command.equals("getPeriodicalsSearchPage")&&!command.equals("setLocale")) {
+		if (command!=null&&!ignoreCommand.contains(command)) {
 			HttpSession session = httpRequest.getSession();
 			
 			User user = (User) session.getAttribute("user");
@@ -46,9 +48,11 @@ public class SecurityFilter implements Filter {
 	}
 
 	@Override
-	public void init(FilterConfig arg0) throws ServletException {
-		// TODO Auto-generated method stub
-
+	public void init(FilterConfig filterConfig) throws ServletException {
+		ignoreCommand =Arrays.asList(filterConfig.getInitParameter("ignoreCommand").split(",")) ;
+		if(ignoreCommand == null){
+			ignoreCommand=new LinkedList<>();
+		}
 	}
 
 }

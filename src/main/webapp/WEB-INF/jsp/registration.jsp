@@ -5,12 +5,12 @@
 <!DOCTYPE html">
 <html lang="en">
 <head>
-<%@include file="WEB-INF/jsp/lib/bootstrapIncluds.jsp"%>
+<%@include file="lib/bootstrapIncluds.jsp"%>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Registration</title>
 </head>
 <body>
-	<%@include file="WEB-INF/jsp/lib/header.jsp"%>
+	<%@include file="lib/header.jsp"%>
 	<div class="container">
 		<c:forEach var="error" items="${errors}">
 			<div class="alert alert-danger">

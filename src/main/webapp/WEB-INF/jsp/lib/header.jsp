@@ -53,10 +53,10 @@
 			</li>
 			<c:if test="${sessionScope.user == null}">
 				<li><a
-					href="${pageContext.request.contextPath}/registration.jsp"><span
+					href="${pageContext.request.contextPath}/controller?command=getRegisterPage"><span
 						class="glyphicon glyphicon-user"></span> <fmt:message
 							key="registration" bundle="${bundle}" /> </a></li>
-				<li><a href="${pageContext.request.contextPath}/login.jsp"><span
+				<li><a href="${pageContext.request.contextPath}/controller?command=getLoginPage"><span
 						class="glyphicon glyphicon-log-in"></span> <fmt:message
 							key="login" bundle="${bundle}" /> </a></li>
 			</c:if>

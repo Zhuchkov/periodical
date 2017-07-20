@@ -37,6 +37,8 @@ public class CommandFactory {
 		{
 			put("empty", new EmptyCommand());
 			put("login", new LoginCommand(UserService.getInstance(),ValidatorFactory.getInstance()));
+			put("getLoginPage", new GetLoginPageCommand());
+			put("getRegisterPage", new GetRegisterPageCommand());
 			put("logout", new LogoutCommand());
 			put("setLocale", new SetLocaleCommand());
 			put("registration", new RegistrationCommand(UserService.getInstance(), ValidatorFactory.getInstance()));
