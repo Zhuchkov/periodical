@@ -27,7 +27,13 @@ public class Controller extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		processRequest(req, resp);
 	}
-	
+	/**
+	 * 
+	 * @param req
+	 * @param resp
+	 * @throws ServletException
+	 * @throws IOException
+	 */
 	private void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
 		String page;
 		CommandFactory commandFactory = CommandFactory.getInstance();
