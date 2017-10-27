@@ -12,7 +12,11 @@ import javax.servlet.http.HttpServletResponse;
 import periodical.controller.command.Command;
 import periodical.controller.command.CommandFactory;
 
-
+/**
+ * 
+ * @author Vladyslav_Zhuchkov
+ *
+ */
 public class Controller extends HttpServlet {
 	
 	
