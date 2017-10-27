@@ -37,7 +37,7 @@ public class Controller extends HttpServlet {
 	 * 
 	 * @param req
 	 * @param resp
-	 * @throws ServletException
+	 * @throws Exception
 	 * @throws IOException
 	 */
 	private void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
