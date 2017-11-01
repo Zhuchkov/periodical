@@ -37,7 +37,11 @@ public class Controller extends HttpServlet {
 	 * 
 	 * @param req
 	 * @param resp
+<<<<<<< HEAD
 	 * @throws ServletException
+=======
+	 * @throws Exception
+>>>>>>> branch 'master' of https://github.com/Zhuchkov/periodical.git
 	 * @throws IOException
 	 */
 	private void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
